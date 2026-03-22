@@ -1,0 +1,1104 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap');
+
+  :root {
+    --accent: #7F77DD;
+    --accent2: #1D9E75;
+    --warn: #EF9F27;
+    --danger: #E24B4A;
+    --surface: var(--color-background-secondary);
+    --card: var(--color-background-primary);
+    --border: var(--color-border-tertiary);
+    --text: var(--color-text-primary);
+    --muted: var(--color-text-secondary);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: transparent; color: var(--text); }
+  .root { padding: 0 0 2rem; }
+
+  /* ── Nav ── */
+  .chapter-nav {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 1rem;
+  }
+  .chap-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 0.5px solid var(--border);
+    background: var(--card); color: var(--muted); transition: all .2s;
+  }
+  .chap-btn:hover { background: var(--surface); color: var(--text); }
+  .chap-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .chapter { display: none; }
+  .chapter.visible { display: block; }
+
+  /* ── Section ── */
+  .sec-label { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+  .sec-title { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: .6rem; line-height: 1.25; }
+  .sec-intro { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .sub-section { margin-bottom: 1.5rem; }
+  .sub-title { font-size: 16px; font-weight: 500; margin-bottom: .6rem; color: var(--text); }
+
+  /* ── Plain-English banner ── */
+  .plain-banner {
+    background: linear-gradient(135deg, #EEEDFE 0%, #E1F5EE 100%);
+    border: 0.5px solid var(--accent); border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+  }
+  .plain-banner .pb-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
+  .plain-banner .pb-text { font-size: 14px; line-height: 1.75; color: var(--text); }
+  .plain-banner .pb-text strong { color: var(--accent); }
+
+  /* ── Crucial box ── */
+  .crucial-box {
+    border: 0.5px solid var(--warn); border-radius: var(--border-radius-lg);
+    background: #FAEEDA22; padding: 1rem 1.25rem; margin: 1rem 0;
+  }
+  .crucial-box .cb-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--warn); margin-bottom: .4rem; }
+  .crucial-box .cb-text { font-size: 14px; line-height: 1.75; color: var(--text); }
+
+  /* ── Cards ── */
+  .card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: 14px; font-weight: 500; margin-bottom: .75rem; }
+
+  /* ── Problem / Solution ── */
+  .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .ps-grid { grid-template-columns: 1fr; } }
+  .prob-card { border: 0.5px solid var(--danger); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; background: var(--card); }
+  .sol-card  { border: 0.5px solid var(--accent2); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; background: var(--card); }
+  .ps-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .5rem; }
+  .ps-label.problem { color: var(--danger); }
+  .ps-label.solution { color: var(--accent2); }
+  .ps-text { font-size: 14px; line-height: 1.6; color: var(--text); }
+
+  /* ── Math block ── */
+  .math-block {
+    background: var(--surface); border-radius: var(--border-radius-md);
+    padding: .75rem 1rem; margin: .75rem 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--accent); border-left: 2px solid var(--accent); line-height: 1.8;
+  }
+
+  /* ── Steps ── */
+  .steps { margin: 1rem 0; }
+  .step { display: flex; gap: 12px; margin-bottom: .75rem; align-items: flex-start; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; margin-top: 1px; }
+  .step-num.purple { background: #EEEDFE; color: #534AB7; }
+  .step-num.teal   { background: #E1F5EE; color: #0F6E56; }
+  .step-num.amber  { background: #FAEEDA; color: #854F0B; }
+  .step-num.coral  { background: #FAECE7; color: #993C1D; }
+  .step-content { flex: 1; }
+  .step-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .step-desc  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── Pros/Cons ── */
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0; }
+  @media (max-width: 480px) { .pros-cons { grid-template-columns: 1fr; } }
+  .pros-list, .cons-list { border-radius: var(--border-radius-md); padding: .75rem 1rem; }
+  .pros-list { background: #E1F5EE; border: 0.5px solid #5DCAA5; }
+  .cons-list { background: #FCEBEB; border: 0.5px solid #F09595; }
+  .pros-list .list-label { font-size: 11px; font-weight: 500; color: #0F6E56; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .5rem; }
+  .cons-list .list-label { font-size: 11px; font-weight: 500; color: #A32D2D; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .5rem; }
+  .pros-list li, .cons-list li { font-size: 13px; line-height: 1.7; list-style: none; color: var(--text); }
+  .pros-list li::before { content: '+ '; font-weight: 500; color: #0F6E56; }
+  .cons-list li::before { content: '− '; font-weight: 500; color: #A32D2D; }
+
+  /* ── Demo box ── */
+  .demo-box { background: var(--surface); border-radius: var(--border-radius-lg); padding: 1.25rem; margin: 1rem 0; border: 0.5px solid var(--border); }
+  .demo-title { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 1rem; }
+
+  /* ── Neurons ── */
+  .neuron-row { display: flex; gap: 8px; align-items: center; margin-bottom: .5rem; flex-wrap: wrap; }
+  .neuron { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; transition: all .3s; border: 0.5px solid var(--border); font-family: 'JetBrains Mono', monospace; }
+  .neuron.alive  { background: #EEEDFE; color: #534AB7; border-color: #AFA9EC; }
+  .neuron.dead   { background: var(--surface); color: var(--muted); opacity: .35; }
+  .neuron.scaled { background: #E1F5EE; color: #0F6E56; border-color: #5DCAA5; }
+
+  /* ── Sliders / Controls ── */
+  .slider-row { display: flex; gap: 10px; align-items: center; margin: .75rem 0; }
+  .slider-row label { font-size: 13px; color: var(--muted); min-width: 100px; }
+  .slider-row input[type=range] { flex: 1; }
+  .slider-row .val { font-size: 13px; font-weight: 500; min-width: 44px; text-align: right; font-family: 'JetBrains Mono', monospace; }
+
+  .run-btn { padding: 8px 20px; border-radius: var(--border-radius-md); cursor: pointer; font-size: 13px; font-weight: 500; border: 0.5px solid var(--accent); background: var(--accent); color: #fff; transition: all .15s; margin-top: .5rem; }
+  .run-btn:hover { opacity: .88; }
+  .run-btn:active { transform: scale(.98); }
+
+  /* ── Trace ── */
+  .trace { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--border-radius-md); padding: .75rem 1rem; margin-top: .75rem; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 2; }
+  .trace-line { display: flex; gap: 8px; flex-wrap: wrap; }
+  .trace-key { color: var(--muted); min-width: 160px; }
+  .trace-val { color: var(--accent); font-weight: 500; }
+  .trace-eq  { color: var(--accent2); }
+
+  /* ── Table ── */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: .75rem 0; }
+  .cmp-table th { text-align: left; padding: .4rem .75rem; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 500; border-bottom: 0.5px solid var(--border); }
+  .cmp-table td { padding: .5rem .75rem; border-bottom: 0.5px solid var(--border); color: var(--text); font-size: 13px; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+  .badge.g { background: #E1F5EE; color: #0F6E56; }
+  .badge.r { background: #FCEBEB; color: #A32D2D; }
+  .badge.y { background: #FAEEDA; color: #854F0B; }
+  .badge.b { background: #EEEDFE; color: #534AB7; }
+
+  /* ── Insight ── */
+  .insight { border-left: 2px solid var(--warn); background: #FAEEDA22; padding: .75rem 1rem; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; font-size: 14px; color: var(--text); margin: 1rem 0; line-height: 1.65; }
+  .insight strong { color: var(--warn); }
+
+  /* ── Divider ── */
+  .divider { height: 0.5px; background: var(--border); margin: 1.5rem 0; }
+
+  /* ── Optimizer sub-tabs ── */
+  .opt-tabs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .opt-tab { padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border); background: var(--card); color: var(--muted); transition: all .18s; }
+  .opt-tab:hover { background: var(--surface); }
+  .opt-tab.active { background: #7F77DD22; color: var(--accent); border-color: var(--accent); }
+  .opt-panel { display: none; }
+  .opt-panel.visible { display: block; }
+
+  /* ── Crucial chain ── */
+  .chain { display: flex; flex-wrap: wrap; gap: 6px; margin: 1rem 0; align-items: center; }
+  .chain-item { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--border); color: var(--text); background: var(--card); }
+  .chain-arrow { color: var(--muted); font-size: 14px; }
+  .chain-item.hi { background: #EEEDFE; border-color: #AFA9EC; color: #534AB7; }
+
+  /* ── Evolution table ── */
+  .evo-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 1rem 0; }
+  .evo-table th { text-align: left; padding: .5rem .75rem; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border-bottom: 0.5px solid var(--border); background: var(--surface); }
+  .evo-table td { padding: .5rem .75rem; border-bottom: 0.5px solid var(--border); color: var(--text); vertical-align: top; }
+  .evo-table tr:last-child td { border-bottom: none; }
+  .evo-table td:first-child { font-weight: 500; color: var(--accent); white-space: nowrap; }
+</style>
+
+<div class="root">
+
+<!-- ── NAV ── -->
+<div class="chapter-nav">
+  <button class="chap-btn active" onclick="show(0)">1. Dropout</button>
+  <button class="chap-btn" onclick="show(1)">2. Batch Norm</button>
+  <button class="chap-btn" onclick="show(2)">3. Weight Init</button>
+  <button class="chap-btn" onclick="show(3)">4. Regularization</button>
+  <button class="chap-btn" onclick="show(4)">5. Optimizers</button>
+  <button class="chap-btn" onclick="show(5)">6. Big Picture</button>
+</div>
+
+<!-- ═══════════════════ CHAPTER 1 — DROPOUT ═══════════════════ -->
+<div class="chapter visible" id="ch0">
+  <div class="sec-label">Chapter 1</div>
+  <div class="sec-title">Dropout</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">Plain English First</div>
+    <div class="pb-text">Imagine training a football squad of 100 players, but the same 11 always play. The starting 11 form rigid habits — Neuron A always covers for Neuron B. The other 89 never improve. Drop the ball: one player is injured on match day and the whole team collapses.<br><br>
+    <strong>Dropout fixes this by randomly benching players before every practice.</strong> Today neurons 3, 7, 42 sit out. Tomorrow a different random set. Over thousands of sessions, every neuron learns to do its job alone. On match day (test time) you field the full squad — and get a superteam that was trained to be independently capable.</div>
+  </div>
+
+  <div class="crucial-box">
+    <div class="cb-label">Why Dropout Is Crucial</div>
+    <div class="cb-text">Without dropout, deep networks with millions of parameters will memorise training data rather than learn the underlying function. They fit noise, achieve near-zero training loss, but fail completely on unseen examples. Dropout is the most cost-effective regulariser in deep learning — it adds zero parameters, costs nothing at inference, and implicitly trains an ensemble of 2ⁿ sub-networks simultaneously.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">The problem: overfitting & co-adaptation</div>
+    <div class="ps-grid">
+      <div class="prob-card">
+        <div class="ps-label problem">Problem 1 — Memorisation</div>
+        <div class="ps-text">An MLP with many parameters can perfectly fit training examples — including noise. It learns "by heart" instead of learning the pattern.<br><br>Train loss → 0, but test loss stays high.</div>
+        <div class="math-block" style="font-size:11px">L_train → 0  but  L_test ↑<br>⇒ Generalisation gap</div>
+      </div>
+      <div class="prob-card">
+        <div class="ps-label problem">Problem 2 — Co-adaptation</div>
+        <div class="ps-text">Neurons learn to rely on each other in fixed ways. Neuron A always corrects for Neuron B's errors. They form a tight dependency. Remove one, and the whole prediction collapses.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">How dropout works — every step</div>
+    <div class="steps">
+      <div class="step"><div class="step-num purple">1</div><div class="step-content"><div class="step-title">Compute activations normally</div><div class="step-desc">h = σ(Wx + b) — forward pass runs as usual. This gives the layer's output vector.</div></div></div>
+      <div class="step"><div class="step-num purple">2</div><div class="step-content"><div class="step-title">Sample a Bernoulli mask — one per neuron, independent</div><div class="step-desc">For each neuron i, flip a biased coin:</div>
+        <div class="math-block">mᵢ ~ Bernoulli(1 − p)<br>mᵢ = 1  with prob (1−p)  → keep<br>mᵢ = 0  with prob p       → drop</div>
+        <div class="step-desc">The mask is re-sampled fresh on every single forward pass. No two training steps use the same sub-network.</div>
+      </div></div>
+      <div class="step"><div class="step-num purple">3</div><div class="step-content"><div class="step-title">Apply the mask — zero out dropped neurons</div><div class="step-desc">h̃ᵢ = mᵢ · hᵢ. A dropped neuron outputs 0 and vanishes entirely from the computation graph. Gradients do not flow through it.</div>
+        <div class="math-block">h̃ᵢ = mᵢ · hᵢ</div>
+      </div></div>
+      <div class="step"><div class="step-num purple">4</div><div class="step-content"><div class="step-title">Inverted dropout — scale up surviving neurons</div><div class="step-desc">Only (1−p) fraction of neurons survive. Without correction, the expected signal magnitude shrinks by (1−p). We compensate by dividing by (1−p):</div>
+        <div class="math-block">h̃ᵢ = (mᵢ / (1−p)) · hᵢ<br><br>E[h̃ᵢ] = (1−p)/(1−p) · hᵢ = hᵢ  ✓</div>
+        <div class="step-desc">This scaling is done at train time so inference requires zero changes.</div>
+      </div></div>
+      <div class="step"><div class="step-num teal">5</div><div class="step-content"><div class="step-title">Test time: no dropout, full network</div><div class="step-desc">All neurons active, no mask sampled, no scaling needed. The full network approximates the average of all 2ⁿ sub-networks trained during the stochastic process. Output is deterministic.</div>
+        <div class="math-block">h̃ᵢ = hᵢ  (inference only)</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Numerical example — trace a forward pass</div>
+    <div class="demo-box">
+      <div class="demo-title">Adjust p and run — watch neurons drop and scale</div>
+      <div class="slider-row">
+        <label>Dropout rate p</label>
+        <input type="range" min="0" max="0.8" step="0.1" value="0.5" id="dp-slider" oninput="dpUpdate()">
+        <span class="val" id="dp-val">0.5</span>
+      </div>
+      <button class="run-btn" onclick="runDropout()">Run forward pass</button>
+      <div style="margin-top:1rem;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:.5rem;">Activations h = [2, 4, 6, 8, 5, 3]</div>
+        <div class="neuron-row" id="neuron-display"></div>
+        <div style="font-size:12px;color:var(--muted);margin:8px 0 4px;">After inverted scaling (survivors ÷ (1−p))</div>
+        <div class="neuron-row" id="neuron-scaled"></div>
+      </div>
+      <div class="trace" id="dp-trace" style="display:none">
+        <div class="trace-line"><span class="trace-key">Input h</span><span class="trace-val" id="t-h"></span></div>
+        <div class="trace-line"><span class="trace-key">Mask m</span><span class="trace-val" id="t-m"></span></div>
+        <div class="trace-line"><span class="trace-key">h after drop</span><span class="trace-val" id="t-drop"></span></div>
+        <div class="trace-line"><span class="trace-key">Scale factor</span><span class="trace-eq" id="t-scale"></span></div>
+        <div class="trace-line"><span class="trace-key">h̃ (final)</span><span class="trace-eq" id="t-final"></span></div>
+        <div class="trace-line"><span class="trace-key">Original avg</span><span class="trace-eq" id="t-orig"></span></div>
+        <div class="trace-line"><span class="trace-key">Scaled avg</span><span class="trace-eq" id="t-exp"></span></div>
+      </div>
+    </div>
+    <div class="insight"><strong>Ensemble effect:</strong> With 6 neurons, there are 2⁶ = 64 possible sub-networks. Each forward pass trains one of them. At test time, the full network approximates all 64 predictions averaged together — a free ensemble.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Pros and cons</div>
+    <div class="pros-cons">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul>
+        <li>Eliminates neuron co-adaptation</li>
+        <li>Zero extra parameters, zero inference cost</li>
+        <li>Implicit ensemble of 2ⁿ sub-networks</li>
+        <li>Works in MLPs and Transformers</li>
+        <li>One line in PyTorch: nn.Dropout(p)</li>
+      </ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul>
+        <li>Slows convergence (noisy gradients)</li>
+        <li>Conflicts with BatchNorm — use one per layer</li>
+        <li>Less effective in CNNs (try SpatialDropout)</li>
+        <li>p needs tuning (typically 0.2–0.5)</li>
+        <li>Not helpful in very small networks</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAPTER 2 — BATCH NORM ═══════════════════ -->
+<div class="chapter" id="ch1">
+  <div class="sec-label">Chapter 2</div>
+  <div class="sec-title">Batch Normalisation</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">Plain English First</div>
+    <div class="pb-text">Picture a kitchen with 10 cooking stations in sequence. Station 1 preps ingredients and hands them to Station 2, which cooks and passes to Station 3. The problem: every time Station 1 tweaks her recipe, the temperature and seasoning of what she passes to Station 2 changes. Station 2 has to constantly re-adapt — and then Station 3 re-adapts to Station 2's changes, and so on. The entire kitchen is always re-adjusting upstream changes instead of doing its actual job.<br><br>
+    <strong>BatchNorm installs a standardisation counter between each station.</strong> Before passing food forward, it rescales everything so it always arrives at roughly the same temperature and portion (mean ≈ 0, variance ≈ 1). Now every station can focus entirely on learning its own cooking job.</div>
+  </div>
+
+  <div class="crucial-box">
+    <div class="cb-label">Why Batch Normalisation Is Crucial</div>
+    <div class="cb-text">As earlier layers update during training, the distribution of activations they produce keeps shifting — this is called Internal Covariate Shift. Later layers waste capacity constantly re-adapting to these upstream changes instead of learning the actual task. BatchNorm eliminates this waste, allowing much higher learning rates, making training dramatically faster, and acting as mild regularisation through the batch-level noise it introduces.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">The problem: internal covariate shift</div>
+    <div class="ps-grid">
+      <div class="prob-card">
+        <div class="ps-label problem">Internal Covariate Shift</div>
+        <div class="ps-text">As layer l updates its weights, the distribution of inputs to layer l+1 changes. Layer l+1 is always chasing a moving target — it spends capacity re-adapting rather than learning. This forces small learning rates and makes deep networks very hard to train.</div>
+      </div>
+      <div class="prob-card">
+        <div class="ps-label problem">Sensitivity to Initialisation</div>
+        <div class="ps-text">Without normalisation, early layers must be initialised with extreme care. Even slightly wrong starting values cascade into exploding or vanishing activations across many layers. This limits how deep networks can practically be.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">How batch normalisation works — every step</div>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:1rem;">Given a mini-batch B = {x₁, x₂, …, xₘ} of activations at a layer:</p>
+    <div class="steps">
+      <div class="step"><div class="step-num purple">1</div><div class="step-content"><div class="step-title">Compute batch mean</div>
+        <div class="math-block">μ_B = (1/m) · Σᵢ xᵢ</div>
+        <div class="step-desc">Average activation across all m examples in the mini-batch.</div>
+      </div></div>
+      <div class="step"><div class="step-num purple">2</div><div class="step-content"><div class="step-title">Compute batch variance</div>
+        <div class="math-block">σ²_B = (1/m) · Σᵢ (xᵢ − μ_B)²</div>
+      </div></div>
+      <div class="step"><div class="step-num purple">3</div><div class="step-content"><div class="step-title">Normalise — shift to zero mean, unit variance</div>
+        <div class="math-block">x̂ᵢ = (xᵢ − μ_B) / √(σ²_B + ε)</div>
+        <div class="step-desc">ε ≈ 1e-8 prevents division by zero. After this step every activation is ~N(0,1).</div>
+      </div></div>
+      <div class="step"><div class="step-num teal">4</div><div class="step-content"><div class="step-title">Scale and shift — learnable γ and β</div>
+        <div class="math-block">yᵢ = γ · x̂ᵢ + β</div>
+        <div class="step-desc">γ (scale) and β (shift) are learnable parameters. They let the network undo normalisation if a different distribution is optimal. Initially γ=1, β=0 (pure normalisation). During training they adapt to whatever distribution the next layer learns to prefer.</div>
+      </div></div>
+      <div class="step"><div class="step-num amber">5</div><div class="step-content"><div class="step-title">At inference: use running statistics</div>
+        <div class="step-desc">At test time there may be only 1 sample — you can't compute a batch mean. Instead BatchNorm uses exponential moving averages of μ and σ² collected during training. In PyTorch: model.eval() switches this on automatically.</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Numerical example</div>
+    <div class="demo-box">
+      <div class="demo-title">Batch = [2, 4, 6, 8], γ=1, β=0</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">Batch x</span><span class="trace-val">[2, 4, 6, 8]</span></div>
+        <div class="trace-line"><span class="trace-key">μ_B</span><span class="trace-val">(2+4+6+8)/4 = 5.0</span></div>
+        <div class="trace-line"><span class="trace-key">σ²_B</span><span class="trace-val">[(2−5)²+(4−5)²+(6−5)²+(8−5)²]/4 = 5.0</span></div>
+        <div class="trace-line"><span class="trace-key">√(σ²_B + ε)</span><span class="trace-val">√5 ≈ 2.236</span></div>
+        <div class="trace-line"><span class="trace-key">x̂ᵢ (normalised)</span><span class="trace-eq">[−1.342, −0.447, +0.447, +1.342]</span></div>
+        <div class="trace-line"><span class="trace-key">yᵢ = γx̂ᵢ + β</span><span class="trace-eq">[−1.342, −0.447, +0.447, +1.342]  (γ=1, β=0)</span></div>
+        <div class="trace-line"><span class="trace-key">After learning γ=2, β=3</span><span class="trace-eq">[+0.316, +2.106, +3.894, +5.684]</span></div>
+      </div>
+      <div class="insight" style="margin-top:.75rem;margin-bottom:0"><strong>γ and β insight:</strong> With γ=1,β=0 the network is constrained to mean=0, var=1. With learnable γ=2,β=3 the network shifts and stretches the distribution to whatever it learned is best for the next layer.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Where to place BatchNorm in an MLP</div>
+    <div class="card">
+      <div class="card-title">Standard placement: Linear → BatchNorm → Activation</div>
+      <div class="math-block">z = W·x + b<br>z̃ = BatchNorm(z)   ← normalise before activation<br>h = ReLU(z̃)</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:.5rem;">Normalising before the activation ensures the activation function operates in its linear region, preventing saturation in sigmoid/tanh and keeping ReLU gradients healthy.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Pros and cons</div>
+    <div class="pros-cons">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul>
+        <li>Dramatically faster convergence</li>
+        <li>Allows much higher learning rates</li>
+        <li>Reduces sensitivity to initialisation</li>
+        <li>Mild regularisation (batch noise)</li>
+        <li>Mitigates vanishing/exploding gradients</li>
+      </ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul>
+        <li>Needs batch size ≥ 8 for stable statistics</li>
+        <li>Poor fit for RNNs (time-step dependency)</li>
+        <li>Train vs inference mismatch if eval() forgotten</li>
+        <li>Conflicts with Dropout in same layer</li>
+        <li>Slight memory and compute overhead</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAPTER 3 — WEIGHT INIT ═══════════════════ -->
+<div class="chapter" id="ch2">
+  <div class="sec-label">Chapter 3</div>
+  <div class="sec-title">Weight Initialisation</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">Plain English First</div>
+    <div class="pb-text">Before the concert starts, the sound engineer sets every fader on the mixing board to a starting position. If every fader is at maximum, the first note blows the speakers — <strong>exploding signal</strong>. If every fader is at zero, no sound comes out at all — <strong>vanishing signal</strong>. You need each fader at a sensible middle level so the first note is clear, audible, and in the right range.<br><br>
+    <strong>Weight initialisation is setting those faders.</strong> In a 20-layer network, a signal passes through 20 multiplications. If weights average just 1.1× instead of 1×, after 20 layers you get 1.1²⁰ ≈ 6.7× amplification. At 0.9× you get 0.9²⁰ ≈ 0.12× — a vanished signal. Xavier and He initialisation find the exact safe starting range for each layer.</div>
+  </div>
+
+  <div class="crucial-box">
+    <div class="cb-label">Why Weight Initialisation Is Crucial</div>
+    <div class="cb-text">The very first forward pass determines whether training can even start. Weights too large → activations explode → NaN → training crashes on step 1. Weights too small → activations vanish → gradients vanish → early layers never learn anything regardless of how many epochs you run. Good initialisation costs nothing (it's just a smarter random draw) and is the difference between training succeeding and failing before it begins.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Root cause: variance propagation through layers</div>
+    <div class="ps-grid">
+      <div class="prob-card">
+        <div class="ps-label problem">Vanishing signal</div>
+        <div class="ps-text">Weights initialised too small. Each layer shrinks the signal. After k layers: h⁽ᵏ⁾ ≈ εᵏ → 0. Gradients vanish in backprop — early layers learn nothing.</div>
+        <div class="math-block" style="font-size:11px">Example: 0.1^20 = 10⁻²⁰ ≈ 0</div>
+      </div>
+      <div class="prob-card">
+        <div class="ps-label problem">Exploding signal</div>
+        <div class="ps-text">Weights initialised too large. Each layer amplifies the signal. After k layers: h⁽ᵏ⁾ ≈ Cᵏ → ∞. Gradients explode → NaN. Training crashes immediately.</div>
+        <div class="math-block" style="font-size:11px">Example: 2^20 = 1,048,576</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">The variance propagation equation</div>
+      <div class="math-block">For z = Wx  where W ∈ ℝⁿᵒᵘᵗ × ⁿⁱⁿ:<br><br>Var(zⱼ) = n_in · Var(W) · Var(x)<br><br>Goal: Var(z) ≈ Var(x)  →  need  n_in · Var(W) = 1<br>→  Var(W) = 1 / n_in  (forward constraint)</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Xavier / Glorot initialisation — for tanh, sigmoid</div>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:.75rem;">
+      Glorot & Bengio (2010) required variance to be preserved in <em>both</em> directions: forward pass (Var(W) = 1/n_in) AND backward pass (Var(W) = 1/n_out). Taking the harmonic mean gives:
+    </p>
+    <div class="math-block">Var(W) = 2 / (n_in + n_out)<br><br>Uniform: W ~ U(−√(6/(n_in+n_out)),  +√(6/(n_in+n_out)))<br>Gaussian: W ~ N(0, √(2/(n_in+n_out)))</div>
+    <div class="demo-box">
+      <div class="demo-title">Xavier calculator</div>
+      <div class="slider-row"><label>n_in</label><input type="range" min="2" max="256" value="64" id="xi-slider" oninput="calcXavier()"><span class="val" id="xi-val">64</span></div>
+      <div class="slider-row"><label>n_out</label><input type="range" min="2" max="256" value="32" id="xo-slider" oninput="calcXavier()"><span class="val" id="xo-val">32</span></div>
+      <div class="trace" id="xavier-trace">
+        <div class="trace-line"><span class="trace-key">n_in + n_out</span><span class="trace-val" id="x-sum"></span></div>
+        <div class="trace-line"><span class="trace-key">Var(W)</span><span class="trace-val" id="x-var"></span></div>
+        <div class="trace-line"><span class="trace-key">Std(W)</span><span class="trace-val" id="x-std"></span></div>
+        <div class="trace-line"><span class="trace-key">Uniform limit</span><span class="trace-eq" id="x-lim"></span></div>
+        <div class="trace-line"><span class="trace-key">Sample range</span><span class="trace-eq" id="x-range"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">He initialisation — for ReLU</div>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:.75rem;">ReLU kills all negative activations — roughly half the neurons output zero every pass. This halves the effective variance. He et al. (2015) doubled the target variance to compensate:</p>
+    <div class="math-block">ReLU kills ~50% of neurons per pass<br>→ Effective variance is halved<br>→ To compensate: Var(W) = 2 / n_in<br><br>W ~ N(0,  √(2 / n_in))</div>
+    <div class="demo-box">
+      <div class="demo-title">He calculator</div>
+      <div class="slider-row"><label>n_in</label><input type="range" min="2" max="256" value="64" id="he-slider" oninput="calcHe()"><span class="val" id="he-val">64</span></div>
+      <div class="trace" id="he-trace">
+        <div class="trace-line"><span class="trace-key">n_in</span><span class="trace-val" id="h-nin"></span></div>
+        <div class="trace-line"><span class="trace-key">Var(W) = 2/n_in</span><span class="trace-val" id="h-var"></span></div>
+        <div class="trace-line"><span class="trace-key">Std(W)</span><span class="trace-val" id="h-std"></span></div>
+        <div class="trace-line"><span class="trace-key">Sample from</span><span class="trace-eq" id="h-range"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Xavier vs He — quick reference</div>
+    <table class="cmp-table">
+      <thead><tr><th>Property</th><th>Xavier / Glorot</th><th>He</th></tr></thead>
+      <tbody>
+        <tr><td>Activation</td><td>tanh, sigmoid, linear</td><td>ReLU, Leaky ReLU, ELU</td></tr>
+        <tr><td>Variance</td><td>2 / (n_in + n_out)</td><td>2 / n_in</td></tr>
+        <tr><td>Why</td><td>Balance forward + backward pass</td><td>Compensate ReLU half-kill</td></tr>
+        <tr><td>Default today</td><td><span class="badge y">Older / sigmoid nets</span></td><td><span class="badge g">Default for CNNs / MLPs</span></td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>Init vs BatchNorm:</strong> Initialisation is about <em>starting stability</em> — preventing explode/vanish at step 0. BatchNorm is about <em>training stability</em> — keeping signals stable throughout all epochs. With BatchNorm, init matters less, but He/Xavier still give faster early convergence.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Pros and cons</div>
+    <div class="pros-cons">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul>
+        <li>Zero computational cost — just a smarter random draw</li>
+        <li>Prevents explode/vanish from step 1</li>
+        <li>Faster convergence from the very first update</li>
+        <li>Works synergistically with BatchNorm</li>
+        <li>Theoretically grounded derivations</li>
+      </ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul>
+        <li>Derived assuming linear activations (approximate)</li>
+        <li>Less critical when BatchNorm is used</li>
+        <li>Mismatched init still hurts (Xavier + ReLU)</li>
+        <li>Doesn't fix architecture-level problems</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAPTER 4 — REGULARIZATION ═══════════════════ -->
+<div class="chapter" id="ch3">
+  <div class="sec-label">Chapter 4</div>
+  <div class="sec-title">Regularisation</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">Plain English First</div>
+    <div class="pb-text">A student who only studied past exam papers can reproduce every answer perfectly — but the moment a question is phrased differently, they're lost. They memorised the questions, not the subject.<br><br>
+    <strong>Regularisation is the teacher marking down for unnecessarily complicated answers.</strong> It adds a cost for complexity, forcing the model to find the simplest explanation that still fits all the evidence.<br><br>
+    L2 (weight decay): soft ongoing tax — bigger weight, bigger cost. Weights shrink smoothly toward zero.<br>
+    L1 (Lasso): flat entry fee — same charge regardless of weight size. Small weights get driven all the way to exactly zero, switching off irrelevant features entirely.</div>
+  </div>
+
+  <div class="crucial-box">
+    <div class="cb-label">Why Regularisation Is Crucial</div>
+    <div class="cb-text">A neural network with more parameters than training examples can always achieve zero training loss — by memorising. Regularisation is the mechanism that prevents this. Without it, models trained beyond a certain point will learn the quirks of the training set rather than the general function, failing entirely on new data. L2 is the default in virtually all modern deep learning (via AdamW's weight_decay) precisely because it's always on, costs almost nothing, and consistently improves generalisation.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">L2 regularisation (Ridge / weight decay)</div>
+    <div class="math-block">L_total = L_data + λ · Σ Wᵢ²<br><br>Gradient: ∂L/∂W = ∂L_data/∂W + 2λW<br><br>Update:  W ← W(1 − 2ηλ) − η · ∂L_data/∂W</div>
+    <div class="insight"><strong>Weight decay view:</strong> The factor (1 − 2ηλ) multiplies every weight at every step — slowly shrinking it toward zero unless the data gradient resists. Large weights are penalised more (gradient ∝ W), producing smooth, generalising solutions.</div>
+    <div class="demo-box">
+      <div class="demo-title">L2 penalty calculator</div>
+      <div class="slider-row"><label>Weight W</label><input type="range" min="-5" max="5" step="0.1" value="2" id="l2-w" oninput="calcL2()"><span class="val" id="l2-wv">2.0</span></div>
+      <div class="slider-row"><label>λ (lambda)</label><input type="range" min="0.001" max="0.5" step="0.001" value="0.1" id="l2-lam" oninput="calcL2()"><span class="val" id="l2-lamv">0.100</span></div>
+      <div class="trace" id="l2-trace">
+        <div class="trace-line"><span class="trace-key">W²</span><span class="trace-val" id="l2-wsq"></span></div>
+        <div class="trace-line"><span class="trace-key">L2 penalty (λW²)</span><span class="trace-val" id="l2-pen"></span></div>
+        <div class="trace-line"><span class="trace-key">Gradient push (2λW)</span><span class="trace-eq" id="l2-grad"></span></div>
+        <div class="trace-line"><span class="trace-key">Decay factor (lr=0.01)</span><span class="trace-eq" id="l2-decay"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">L1 regularisation (Lasso)</div>
+    <div class="math-block">L_total = L_data + λ · Σ |Wᵢ|<br><br>Gradient (W ≠ 0):  ∂|W|/∂W = sign(W) = ±1<br><br>Effect: constant force toward 0 → drives weights to exactly zero</div>
+    <div class="insight"><strong>Why sparsity?</strong> L2 gradient → 0 as W → 0 (weakens as weight shrinks). L1 gradient = constant ±λ regardless of weight size (never weakens). So L1 keeps pushing small weights past zero — switching them off entirely. Built-in feature selection.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Weight decay visualisation</div>
+    <div class="demo-box">
+      <div class="demo-title">L1 vs L2 decay over 20 gradient steps</div>
+      <div class="slider-row"><label>Initial W</label><input type="range" min="0.1" max="5" step="0.1" value="3" id="reg-w" oninput="updateRegViz()"><span class="val" id="reg-wv">3.0</span></div>
+      <div class="slider-row"><label>λ (lambda)</label><input type="range" min="0.01" max="0.5" step="0.01" value="0.1" id="reg-lam" oninput="updateRegViz()"><span class="val" id="reg-lamv">0.10</span></div>
+      <canvas id="reg-canvas" width="560" height="180" style="width:100%;max-width:560px;border-radius:var(--border-radius-md);margin-top:.75rem;"></canvas>
+      <div style="display:flex;gap:16px;margin-top:.5rem;font-size:12px;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:2px;background:#7F77DD;display:inline-block;border-radius:1px"></span>L2 (exponential, never hits 0)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:2px;background:#E24B4A;display:inline-block;border-radius:1px"></span>L1 (linear, hits exactly 0)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">L1 vs L2 vs Dropout — the full comparison</div>
+    <table class="cmp-table">
+      <thead><tr><th>Property</th><th>L1 (Lasso)</th><th>L2 (Ridge)</th><th>Dropout</th></tr></thead>
+      <tbody>
+        <tr><td>Penalty</td><td>λ|W|</td><td>λW²</td><td>None (stochastic)</td></tr>
+        <tr><td>Effect on weights</td><td>Exact zeros — sparse</td><td>Small, nonzero</td><td>Indirect</td></tr>
+        <tr><td>Feature selection</td><td><span class="badge g">Yes</span></td><td><span class="badge r">No</span></td><td><span class="badge r">No</span></td></tr>
+        <tr><td>Deep learning usage</td><td><span class="badge r">Rare</span></td><td><span class="badge g">Always (AdamW)</span></td><td><span class="badge g">MLPs, Transformers</span></td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>Modern recipe:</strong> L2 via AdamW weight_decay + Dropout in dense layers + BatchNorm in conv layers. Each targets a different failure mode. They are complementary — not alternatives.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Pros and cons</div>
+    <div class="pros-cons">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul>
+        <li>L2: smooth, stable, theoretically clean</li>
+        <li>L1: automatic feature selection via sparsity</li>
+        <li>Both: directly reduce the generalisation gap</li>
+        <li>L2: trivial — just weight_decay in AdamW</li>
+        <li>Elastic Net: L1 + L2 combined</li>
+      </ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul>
+        <li>λ must be tuned as a hyperparameter</li>
+        <li>L1: non-differentiable at 0 (subgradient)</li>
+        <li>L1: rarely effective in deep learning</li>
+        <li>L2 too large → underfitting</li>
+        <li>Not a substitute for more training data</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAPTER 5 — OPTIMIZERS ═══════════════════ -->
+<div class="chapter" id="ch4">
+  <div class="sec-label">Chapter 5</div>
+  <div class="sec-title">Optimisers</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">Plain English First</div>
+    <div class="pb-text">You are blindfolded on a hilly landscape. Your goal: reach the lowest valley. You can't see the whole terrain — only the slope under your feet right now. Your strategy for deciding which direction to step and how big each step should be is your <strong>optimiser</strong>.<br><br>
+    GD: measure the entire map before one step — perfect direction, impossibly slow.<br>
+    SGD: poke one random spot, step immediately — fast but wildly noisy.<br>
+    Momentum: you're on a sledge — inertia smooths the zig-zag.<br>
+    NAG: same sledge but you lean forward to look where you're heading before applying the brakes.<br>
+    AdaGrad: shorter steps on well-worn paths, longer steps on rarely-visited cliffs — but never forgets, so eventually grinds to a halt.<br>
+    RMSProp: AdaGrad with fading memory — only recent terrain counts.<br>
+    Adam: sledge + adaptive footing + cold-start correction — the default.<br>
+    AdamW: Adam with clean, decoupled weight decay — the modern standard.</div>
+  </div>
+
+  <div class="crucial-box">
+    <div class="cb-label">Why Optimisers Are Crucial</div>
+    <div class="cb-text">The loss landscape of a deep network is a high-dimensional non-convex surface with saddle points, flat plateaus, narrow valleys, and many local minima. A naive gradient step stalls at saddles, zig-zags in valleys, and oscillates near minima. The choice of optimiser determines whether training converges at all, how fast it converges, and whether it finds solutions that generalise. Adam's combination of momentum and adaptive scaling is why modern networks with billions of parameters can be trained reliably at all.</div>
+  </div>
+
+  <!-- Optimizer sub-tabs -->
+  <div class="opt-tabs">
+    <button class="opt-tab active" onclick="showOpt(0)">GD / SGD</button>
+    <button class="opt-tab" onclick="showOpt(1)">Momentum</button>
+    <button class="opt-tab" onclick="showOpt(2)">NAG</button>
+    <button class="opt-tab" onclick="showOpt(3)">AdaGrad</button>
+    <button class="opt-tab" onclick="showOpt(4)">RMSProp</button>
+    <button class="opt-tab" onclick="showOpt(5)">Adam</button>
+    <button class="opt-tab" onclick="showOpt(6)">AdamW</button>
+  </div>
+
+  <!-- GD / SGD -->
+  <div class="opt-panel visible" id="op0">
+    <div class="sub-title">Gradient Descent, SGD, Mini-batch SGD</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">GD Problem</div><div class="ps-text">Compute gradient over all N samples before each step. Accurate but impossibly slow for large datasets. One update per epoch.</div></div>
+      <div class="sol-card"><div class="ps-label solution">SGD / Mini-batch Fix</div><div class="ps-text">Use 1 sample (SGD) or B samples (mini-batch) per step. Much faster. Noise in mini-batch gradient can actually help escape saddle points.</div></div>
+    </div>
+    <div class="math-block">GD:        g = (1/N)·Σ gᵢ,   W ← W − η·g        [1 update/epoch]<br>SGD:       g = gᵢ,             W ← W − η·gᵢ       [N updates/epoch]<br>Mini-batch:g = (1/B)·Σⱼ gⱼ,  W ← W − η·g        [N/B updates/epoch]</div>
+    <div class="demo-box">
+      <div class="demo-title">Numerical example — N=4 samples, gradients [2, 4, 6, 8]</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">GD gradient</span><span class="trace-val">(2+4+6+8)/4 = 5.0</span></div>
+        <div class="trace-line"><span class="trace-key">GD update (η=0.1)</span><span class="trace-eq">W ← W − 0.1×5.0 = W − 0.5</span></div>
+        <div class="trace-line"><span class="trace-key">SGD step 1 (g₁=2)</span><span class="trace-eq">W ← W − 0.1×2 = W − 0.2</span></div>
+        <div class="trace-line"><span class="trace-key">SGD step 2 (g₂=4)</span><span class="trace-eq">W ← W − 0.1×4 = W − 0.4</span></div>
+        <div class="trace-line"><span class="trace-key">Mini-batch B=2 step1</span><span class="trace-eq">g=(2+4)/2=3, W ← W − 0.3</span></div>
+        <div class="trace-line"><span class="trace-key">Mini-batch B=2 step2</span><span class="trace-eq">g=(6+8)/2=7, W ← W − 0.7</span></div>
+      </div>
+    </div>
+    <table class="cmp-table" style="margin-top:.75rem">
+      <thead><tr><th>Method</th><th>Data/update</th><th>Updates/epoch</th><th>Gradient quality</th></tr></thead>
+      <tbody>
+        <tr><td>GD</td><td>All N</td><td>1</td><td>Exact but expensive</td></tr>
+        <tr><td>SGD</td><td>1 sample</td><td>N</td><td>Very noisy</td></tr>
+        <tr><td>Mini-batch</td><td>B samples</td><td>N/B</td><td>Practical sweet spot</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Momentum -->
+  <div class="opt-panel" id="op1">
+    <div class="sub-title">Momentum</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problem it fixes</div><div class="ps-text">In narrow loss valleys, plain SGD oscillates side-to-side (zig-zag). It makes many costly sideways moves and very little net progress toward the minimum along the valley floor.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Accumulate a velocity vector that persists across steps. Consistent gradient directions build up speed. Opposing gradient directions cancel out. Zig-zag is damped, valley progress accelerates.</div></div>
+    </div>
+    <div class="math-block">vₜ = β·vₜ₋₁ + (1−β)·∇L(Wₜ)   [velocity — smoothed gradient]<br>Wₜ₊₁ = Wₜ − η·vₜ<br><br>β=0: no memory = plain SGD<br>β=0.9: strong memory, smooth path (typical)</div>
+    <div class="demo-box">
+      <div class="demo-title">3-step trace — W₀=0, η=0.1, β=0.9, grads=[2, 1.5, 1]</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">v₁</span><span class="trace-val">0.9×0 + 0.1×2 = 0.2</span></div>
+        <div class="trace-line"><span class="trace-key">W₁</span><span class="trace-eq">0 − 0.1×0.2 = −0.020</span></div>
+        <div class="trace-line"><span class="trace-key">v₂</span><span class="trace-val">0.9×0.2 + 0.1×1.5 = 0.33</span></div>
+        <div class="trace-line"><span class="trace-key">W₂</span><span class="trace-eq">−0.020 − 0.1×0.33 = −0.053</span></div>
+        <div class="trace-line"><span class="trace-key">v₃</span><span class="trace-val">0.9×0.33 + 0.1×1 = 0.397</span></div>
+        <div class="trace-line"><span class="trace-key">W₃</span><span class="trace-eq">−0.053 − 0.1×0.397 = −0.0927</span></div>
+        <div class="trace-line"><span class="trace-key">Observation</span><span class="trace-eq">velocity grows (0.2→0.33→0.397) — consistent direction builds speed</span></div>
+      </div>
+    </div>
+    <div class="pros-cons" style="margin-top:.75rem">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul><li>Damps zig-zag oscillations</li><li>Faster convergence in valleys</li><li>Handles noisy gradients better</li></ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul><li>Still evaluates gradient at current position</li><li>Can overshoot near sharp minima</li><li>Single global learning rate</li></ul></div>
+    </div>
+  </div>
+
+  <!-- NAG -->
+  <div class="opt-panel" id="op2">
+    <div class="sub-title">Nesterov Accelerated Gradient (NAG)</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problem it fixes</div><div class="ps-text">Classical momentum evaluates gradient at the current position — before the momentum step. If velocity is large, the method reacts late and overshoots turns or minima. It is reactive, not proactive.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Peek ahead first: project where momentum is about to take you, then evaluate the gradient there. This gives earlier warning that a minimum is approaching, so the method slows down before overshooting.</div></div>
+    </div>
+    <div class="math-block">W̃ₜ = Wₜ − β·vₜ₋₁          [look-ahead position]<br>gₜ = ∇L(W̃ₜ)                [gradient at look-ahead]<br>vₜ = β·vₜ₋₁ + η·gₜ<br>Wₜ₊₁ = Wₜ − vₜ<br><br>Momentum: evaluate gradient where you ARE<br>NAG:      evaluate gradient where you're GOING</div>
+    <div class="demo-box">
+      <div class="demo-title">3-step trace — ∇L(W) = 2W+2, W₀=0, β=0.9, η=0.1</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">W̃₀, g₀</span><span class="trace-val">0−0.9×0=0,  g₀=2×0+2=2.000</span></div>
+        <div class="trace-line"><span class="trace-key">v₁, W₁</span><span class="trace-eq">0.9×0+0.1×2=0.2,  W₁=0−0.2=−0.200</span></div>
+        <div class="trace-line"><span class="trace-key">W̃₁, g₁</span><span class="trace-val">−0.2−0.9×0.2=−0.38,  g₁=2×(−0.38)+2=1.240</span></div>
+        <div class="trace-line"><span class="trace-key">v₂, W₂</span><span class="trace-eq">0.9×0.2+0.1×1.24=0.304,  W₂=−0.200−0.304=−0.504</span></div>
+        <div class="trace-line"><span class="trace-key">W̃₂, g₂</span><span class="trace-val">−0.504−0.9×0.304=−0.778,  g₂=2×(−0.778)+2=0.445</span></div>
+        <div class="trace-line"><span class="trace-key">v₃, W₃</span><span class="trace-eq">0.9×0.304+0.1×0.445=0.318,  W₃=−0.504−0.318=−0.822</span></div>
+        <div class="trace-line"><span class="trace-key">Observation</span><span class="trace-eq">Look-ahead gradients shrink (2→1.24→0.445) — NAG decelerates near minimum</span></div>
+      </div>
+    </div>
+    <div class="insight"><strong>Momentum says:</strong> move, then correct. <strong>NAG says:</strong> peek ahead, then move.</div>
+  </div>
+
+  <!-- AdaGrad -->
+  <div class="opt-panel" id="op3">
+    <div class="sub-title">AdaGrad — per-parameter adaptive learning rates</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problem it fixes</div><div class="ps-text">All previous optimisers use one global η for every parameter. A parameter receiving large, frequent gradients (common word "the") overshoots. One receiving tiny, rare gradients ("tachycardia") barely moves. A single η can't be right for both.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Track the sum of squared gradients per parameter. Scale η inversely by √(accumulated sum). Frequently updated parameters automatically get smaller steps. Rare parameters keep a larger step.</div></div>
+    </div>
+    <div class="math-block">Gₜ = Gₜ₋₁ + gₜ²                   [accumulated squared gradient]<br>Wₜ₊₁ = Wₜ − (η / √(Gₜ + ε)) · gₜ<br><br>Effective rate per param: ηᵢ = η / √(Gᵢₜ + ε)<br>Large grad history → small step   (won't overshoot)<br>Small grad history → large step   (won't stagnate)</div>
+    <div class="demo-box">
+      <div class="demo-title">Two parameters: W₁ gets large grads, W₂ gets tiny grads — η=0.1, ε=1e-8</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">g⁽¹⁾=[3, 0.01]</span><span class="trace-val">G₁=[9, 0.0001]</span></div>
+        <div class="trace-line"><span class="trace-key">Step W₁</span><span class="trace-eq">0.1/√9 × 3 = 0.1/3 × 3 = 0.100</span></div>
+        <div class="trace-line"><span class="trace-key">Step W₂</span><span class="trace-eq">0.1/√0.0001 × 0.01 = 0.1/0.01 × 0.01 = 0.100</span></div>
+        <div class="trace-line"><span class="trace-key">After 100 steps</span><span class="trace-val">G₁=900, G₂=0.01</span></div>
+        <div class="trace-line"><span class="trace-key">ηeff for W₁</span><span class="trace-eq">0.1/√900 = 0.1/30 = 0.0033  ← tiny, slowing down</span></div>
+        <div class="trace-line"><span class="trace-key">ηeff for W₂</span><span class="trace-eq">0.1/√0.01 = 0.1/0.1 = 1.0    ← still large</span></div>
+        <div class="trace-line"><span class="trace-key">Fatal problem</span><span class="trace-eq">Gₜ only grows → η → 0 → training freezes</span></div>
+      </div>
+    </div>
+    <div class="pros-cons" style="margin-top:.75rem">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul><li>Per-parameter adaptive rate</li><li>Excellent for sparse features (NLP)</li><li>Eliminates per-layer η tuning</li></ul></div>
+      <div class="cons-list"><div class="list-label">Fatal limitation</div><ul><li>Gₜ only accumulates — never forgets</li><li>Learning rate → 0 → training freezes</li><li>Not suitable for deep networks</li></ul></div>
+    </div>
+  </div>
+
+  <!-- RMSProp -->
+  <div class="opt-panel" id="op4">
+    <div class="sub-title">RMSProp — fixing AdaGrad's dying learning rate</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problem it fixes</div><div class="ps-text">AdaGrad's Gₜ accumulates all past squared gradients forever. After thousands of steps, Gₜ → ∞ and η/√Gₜ → 0. Every parameter's learning rate shrinks to zero. Training stalls.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Replace the growing sum with an exponential moving average (EMA) of squared gradients. Old gradients fade out with decay ρ. The denominator reflects only recent gradient magnitude — never explodes.</div></div>
+    </div>
+    <div class="math-block">sₜ = ρ·sₜ₋₁ + (1−ρ)·gₜ²         [EMA of squared grads, ρ≈0.9]<br>Wₜ₊₁ = Wₜ − (η / √(sₜ + ε)) · gₜ<br><br>AdaGrad: Gₜ = Gₜ₋₁ + gₜ²        (always growing)<br>RMSProp: sₜ = ρ·sₜ₋₁ + (1−ρ)·gₜ² (bounded, fading memory)</div>
+    <div class="demo-box">
+      <div class="demo-title">3-step trace — W₀=1, η=0.1, ρ=0.9, constant g=2</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">s₁</span><span class="trace-val">0.9×0 + 0.1×4 = 0.400</span></div>
+        <div class="trace-line"><span class="trace-key">W₁</span><span class="trace-eq">1.0 − 0.1/√0.4 × 2 = 1.0 − 0.316 = 0.684</span></div>
+        <div class="trace-line"><span class="trace-key">s₂</span><span class="trace-val">0.9×0.4 + 0.1×4 = 0.760</span></div>
+        <div class="trace-line"><span class="trace-key">W₂</span><span class="trace-eq">0.684 − 0.1/√0.76 × 2 = 0.684 − 0.229 = 0.455</span></div>
+        <div class="trace-line"><span class="trace-key">s₃</span><span class="trace-val">0.9×0.76 + 0.1×4 = 1.084</span></div>
+        <div class="trace-line"><span class="trace-key">W₃</span><span class="trace-eq">0.455 − 0.1/√1.084 × 2 = 0.455 − 0.192 = 0.263</span></div>
+        <div class="trace-line"><span class="trace-key">sₜ converges to</span><span class="trace-eq">g² = 4 (stable!) → ηeff = 0.1/2 = 0.05 stays constant</span></div>
+      </div>
+    </div>
+    <div class="insight"><strong>sₜ stabilises</strong> instead of growing forever. Once stable, the effective learning rate is constant. Unlike AdaGrad, training can continue indefinitely without the learning rate dying.</div>
+    <div class="pros-cons" style="margin-top:.75rem">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul><li>Fixes AdaGrad's dying rate</li><li>Good for RNNs (Hinton's original use)</li><li>Works in non-stationary settings</li></ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul><li>No momentum term</li><li>Biased EMA early in training (s₀=0)</li><li>No bias correction</li></ul></div>
+    </div>
+  </div>
+
+  <!-- Adam -->
+  <div class="opt-panel" id="op5">
+    <div class="sub-title">Adam — momentum + adaptive scaling + bias correction</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problems it fixes</div><div class="ps-text">1. RMSProp has no momentum — it adapts step size but doesn't smooth direction.<br><br>2. Both mₜ and vₜ start at 0. Early estimates are severely biased toward zero — first steps are too small or erratic before the estimates warm up.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Combine: EMA of gradients (momentum, first moment mₜ) + EMA of squared gradients (RMSProp, second moment vₜ) + divide both by (1−βᵗ) to correct the zero-initialisation bias.</div></div>
+    </div>
+    <div class="math-block">mₜ = β₁·mₜ₋₁ + (1−β₁)·gₜ        [first moment — smoothed direction]<br>vₜ = β₂·vₜ₋₁ + (1−β₂)·gₜ²       [second moment — recent magnitude]<br><br>m̂ₜ = mₜ/(1−β₁ᵗ)                  [bias-corrected direction]<br>v̂ₜ = vₜ/(1−β₂ᵗ)                  [bias-corrected magnitude]<br><br>Wₜ₊₁ = Wₜ − (η/√(v̂ₜ)+ε) · m̂ₜ<br><br>Defaults: β₁=0.9, β₂=0.999, ε=1e-8, η=0.001</div>
+    <div class="demo-box">
+      <div class="demo-title">Step 1 trace — W₀=0, defaults, g₁=0.5</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">m₁</span><span class="trace-val">0.9×0 + 0.1×0.5 = 0.05</span></div>
+        <div class="trace-line"><span class="trace-key">v₁</span><span class="trace-val">0.999×0 + 0.001×0.25 = 0.00025</span></div>
+        <div class="trace-line"><span class="trace-key">m̂₁ (bias-corrected)</span><span class="trace-eq">0.05 / (1−0.9) = 0.05/0.1 = 0.500  ← restored!</span></div>
+        <div class="trace-line"><span class="trace-key">v̂₁ (bias-corrected)</span><span class="trace-eq">0.00025 / (1−0.999) = 0.25</span></div>
+        <div class="trace-line"><span class="trace-key">Update</span><span class="trace-eq">0 − (0.001/√0.25)×0.5 = 0 − 0.001 = −0.001</span></div>
+        <div class="trace-line"><span class="trace-key">Without bias corr.</span><span class="trace-eq">m̂₁ would be 0.05 instead of 0.5 → 10× too small</span></div>
+      </div>
+    </div>
+    <div class="insight"><strong>Why bias correction matters:</strong> At t=1, m₁ = 0.1×g₁ — just 10% of the gradient. Without correction the first step is 10× too small. The divisor (1−β₁ᵗ) = 0.1 at t=1 restores it to the full gradient. After ~50 steps, β₁⁵⁰ ≈ 0.005 so 1−β₁ᵗ ≈ 1 — correction has no effect.</div>
+    <div class="pros-cons" style="margin-top:.75rem">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul><li>Momentum + adaptive scaling in one</li><li>Bias correction stabilises early steps</li><li>Robust defaults — rarely needs tuning</li><li>De facto standard in deep learning</li></ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul><li>May find sharp minima → worse generalisation</li><li>L2 regularisation is distorted (use AdamW)</li><li>2× memory: stores mₜ and vₜ per parameter</li></ul></div>
+    </div>
+  </div>
+
+  <!-- AdamW -->
+  <div class="opt-panel" id="op6">
+    <div class="sub-title">AdamW — decoupled weight decay</div>
+    <div class="ps-grid">
+      <div class="prob-card"><div class="ps-label problem">Problem it fixes</div><div class="ps-text">In Adam, adding L2 regularisation puts λW into the gradient. Adam then scales this by 1/√v̂ₜ — which varies per parameter and per step. The weight decay effect becomes inconsistent and unpredictable. It is not truly "weight decay" at all.</div></div>
+      <div class="sol-card"><div class="ps-label solution">Solution</div><div class="ps-text">Apply weight decay directly to the weights after the gradient step — as a separate, constant multiplicative term. No scaling. Every parameter shrinks by exactly ηλ per step, regardless of gradient history.</div></div>
+    </div>
+    <div class="math-block">Adam + L2:  Wₜ₊₁ = Wₜ − (η/√v̂ₜ+ε)·m̂ₜ − (ηλ/√v̂ₜ+ε)·Wₜ  [distorted]<br><br>AdamW:     Wₜ₊₁ = Wₜ(1−ηλ) − (η/√v̂ₜ+ε)·m̂ₜ              [clean]<br><br>Decay term (1−ηλ) is constant per step — independent of v̂ₜ</div>
+    <div class="demo-box">
+      <div class="demo-title">Decay comparison — W=1, η=0.001, λ=0.01, v̂₁=0.25</div>
+      <div class="trace">
+        <div class="trace-line"><span class="trace-key">Adam+L2 decay</span><span class="trace-val">ηλ/√v̂ = 0.001×0.01/√0.25 = 0.00002  (scaled by v̂)</span></div>
+        <div class="trace-line"><span class="trace-key">AdamW decay</span><span class="trace-eq">ηλ = 0.001×0.01 = 0.00001  (fixed, independent of v̂)</span></div>
+        <div class="trace-line"><span class="trace-key">When v̂=0.001</span><span class="trace-val">Adam+L2 decay = 0.001×0.01/0.032 = 0.000316  (10× larger!)</span></div>
+        <div class="trace-line"><span class="trace-key">AdamW (same)</span><span class="trace-eq">Still 0.00001  ← constant, predictable</span></div>
+      </div>
+    </div>
+    <div class="insight"><strong>Why AdamW is now the default:</strong> Clean, uniform decay across all parameters. Better generalisation than Adam on virtually all benchmarks. Used in GPT, BERT, ViT, LLaMA. In PyTorch: torch.optim.AdamW(params, lr=1e-3, weight_decay=0.01).</div>
+    <div class="pros-cons" style="margin-top:.75rem">
+      <div class="pros-list"><div class="list-label">Advantages</div><ul><li>Correct, predictable weight decay</li><li>Better generalisation than Adam</li><li>State-of-the-art on most architectures</li><li>Drop-in replacement for Adam</li></ul></div>
+      <div class="cons-list"><div class="list-label">Limitations</div><ul><li>Inherits Adam's sharp-minima tendency</li><li>Same 2× memory overhead as Adam</li><li>Extra λ hyperparameter to tune</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CHAPTER 6 — BIG PICTURE ═══════════════════ -->
+<div class="chapter" id="ch5">
+  <div class="sec-label">Chapter 6</div>
+  <div class="sec-title">The Big Picture — Why Every Concept Is Crucial</div>
+
+  <div class="plain-banner">
+    <div class="pb-label">The Complete Story</div>
+    <div class="pb-text">These five tools are not alternatives — they work at <strong>different stages</strong> of training and fix <strong>completely different failure modes</strong>. Remove any one of them and a different kind of failure takes over. Together, they are what makes training modern deep networks reliable at all.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Each concept's exact role</div>
+    <table class="cmp-table">
+      <thead><tr><th>Tool</th><th>When it acts</th><th>Problem it prevents</th><th>Without it</th></tr></thead>
+      <tbody>
+        <tr><td>Weight Init</td><td>Before step 1</td><td>Signals exploding or vanishing at startup</td><td>Training crashes or stalls before it begins</td></tr>
+        <tr><td>Batch Norm</td><td>Every forward pass</td><td>Distribution shift between layers slowing training</td><td>Must use tiny lr, slow convergence, sensitive to init</td></tr>
+        <tr><td>Dropout</td><td>Every training pass</td><td>Neuron co-adaptation and memorisation</td><td>Model memorises training set, fails on new data</td></tr>
+        <tr><td>Regularisation</td><td>Every weight update</td><td>Weights growing large, overly complex boundaries</td><td>Generalisation gap, poor test performance</td></tr>
+        <tr><td>Optimiser</td><td>Every weight update</td><td>Stalling at saddles, zig-zagging, wrong step size</td><td>Slow convergence, non-convergence, or divergence</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">The optimiser evolution — why each one exists</div>
+    <table class="evo-table">
+      <thead><tr><th>Optimiser</th><th>Problem fixed</th><th>Mechanism</th><th>New limitation introduced</th></tr></thead>
+      <tbody>
+        <tr><td>GD</td><td>— (baseline)</td><td>Full-data gradient</td><td>1 update/epoch — impossibly slow</td></tr>
+        <tr><td>SGD</td><td>Cost of GD</td><td>Per-sample gradient</td><td>High variance, zig-zag, saddle stalls</td></tr>
+        <tr><td>Mini-batch</td><td>Variance of SGD</td><td>Batch-averaged gradient</td><td>No adaptive step size</td></tr>
+        <tr><td>Momentum</td><td>Zig-zag of SGD</td><td>Velocity memory</td><td>Reactive — evaluates at current pos</td></tr>
+        <tr><td>NAG</td><td>Overshoot of momentum</td><td>Look-ahead gradient</td><td>Still one global learning rate</td></tr>
+        <tr><td>AdaGrad</td><td>One-size-fits-all η</td><td>Cumulative squared gradient scaling</td><td>η → 0 eventually — training dies</td></tr>
+        <tr><td>RMSProp</td><td>Dying η of AdaGrad</td><td>EMA of squared gradients</td><td>No momentum, biased early steps</td></tr>
+        <tr><td>Adam</td><td>No momentum + bias</td><td>Momentum + EMA + bias correction</td><td>L2 decay distorted by adaptive scaling</td></tr>
+        <tr><td>AdamW</td><td>Distorted L2 in Adam</td><td>Decoupled weight decay</td><td>Inherits Adam's sharp minima tendency</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">Modern recipe — what gets used in practice</div>
+    <table class="cmp-table">
+      <thead><tr><th>Architecture</th><th>Optimiser</th><th>Regularisation</th><th>Normalisation</th></tr></thead>
+      <tbody>
+        <tr><td>Transformers (GPT, BERT)</td><td><span class="badge b">AdamW</span></td><td>Weight decay 0.01–0.1</td><td>LayerNorm</td></tr>
+        <tr><td>Image CNNs (ResNet)</td><td><span class="badge b">SGD+Momentum</span></td><td>L2 + Dropout</td><td>BatchNorm</td></tr>
+        <tr><td>MLPs (tabular)</td><td><span class="badge b">AdamW</span></td><td>Dropout 0.2–0.5</td><td>BatchNorm</td></tr>
+        <tr><td>RNNs / LSTMs</td><td><span class="badge b">RMSProp / Adam</span></td><td>Dropout</td><td>LayerNorm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">All key formulas — reference card</div>
+    <div class="demo-box">
+      <div class="math-block" style="font-size:12px;line-height:2.2">
+<strong style="color:var(--text)">Dropout:</strong>  h̃ᵢ = (mᵢ/(1−p))·hᵢ   mᵢ~Bern(1−p)   [train]  |  h̃ᵢ=hᵢ  [test]<br>
+<strong style="color:var(--text)">BatchNorm:</strong> x̂ᵢ=(xᵢ−μ_B)/√(σ²_B+ε),  yᵢ=γx̂ᵢ+β<br>
+<strong style="color:var(--text)">Xavier:</strong>    Var(W)=2/(n_in+n_out)   →  W~U(±√(6/(n_in+n_out)))<br>
+<strong style="color:var(--text)">He:</strong>        Var(W)=2/n_in           →  W~N(0, √(2/n_in))<br>
+<strong style="color:var(--text)">L2:</strong>        L=L_data+λΣWᵢ²,  ∂L/∂W=∂L_data/∂W+2λW<br>
+<strong style="color:var(--text)">L1:</strong>        L=L_data+λΣ|Wᵢ|, ∂L/∂W=∂L_data/∂W+λ·sign(W)<br>
+<strong style="color:var(--text)">Momentum:</strong>  vₜ=β·vₜ₋₁+(1−β)·gₜ,  Wₜ₊₁=Wₜ−η·vₜ<br>
+<strong style="color:var(--text)">NAG:</strong>       W̃=Wₜ−β·vₜ₋₁,  gₜ=∇L(W̃),  vₜ=β·vₜ₋₁+η·gₜ,  Wₜ₊₁=Wₜ−vₜ<br>
+<strong style="color:var(--text)">AdaGrad:</strong>   Gₜ=Gₜ₋₁+gₜ²,  Wₜ₊₁=Wₜ−(η/√(Gₜ+ε))·gₜ<br>
+<strong style="color:var(--text)">RMSProp:</strong>   sₜ=ρ·sₜ₋₁+(1−ρ)·gₜ²,  Wₜ₊₁=Wₜ−(η/√(sₜ+ε))·gₜ<br>
+<strong style="color:var(--text)">Adam:</strong>      mₜ=β₁mₜ₋₁+(1−β₁)gₜ,  vₜ=β₂vₜ₋₁+(1−β₂)gₜ²<br>
+           m̂ₜ=mₜ/(1−β₁ᵗ),  v̂ₜ=vₜ/(1−β₂ᵗ),  Wₜ₊₁=Wₜ−(η/√(v̂ₜ)+ε)·m̂ₜ<br>
+<strong style="color:var(--text)">AdamW:</strong>     Wₜ₊₁=Wₜ(1−ηλ)−(η/√(v̂ₜ)+ε)·m̂ₜ
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sub-section">
+    <div class="sub-title">One-line intuitions</div>
+    <div class="card">
+      <div style="display:grid;gap:.6rem;">
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#EEEDFE;color:#534AB7;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">Dropout</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Don't let any neuron free-ride — make every one independently capable.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#E1F5EE;color:#0F6E56;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">Batch Norm</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Keep the signal at a healthy volume as it passes through every layer.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#FAEEDA;color:#854F0B;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">Weight Init</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Start every fader at a safe level so the first note is neither silent nor deafening.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#FCEBEB;color:#A32D2D;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">L2 Reg</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Tax complexity — prefer smaller weights and smoother decision boundaries.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#FCEBEB;color:#A32D2D;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">L1 Reg</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Flat fee per feature — switch off everything that isn't genuinely useful.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="background:#EEEDFE;color:#534AB7;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0">AdamW</span><span style="font-size:13px;color:var(--muted);line-height:1.6">Momentum + adaptive footing + cold-start fix + clean weight decay. Use this by default.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- .root -->
+
+<script>
+// ── Chapter nav ──────────────────────────────────
+const chapters = document.querySelectorAll('.chapter');
+const btns = document.querySelectorAll('.chap-btn');
+function show(i) {
+  chapters.forEach((c,j) => c.classList.toggle('visible', j===i));
+  btns.forEach((b,j) => b.classList.toggle('active', j===i));
+  if(i===2){ calcXavier(); calcHe(); }
+  if(i===3){ calcL2(); updateRegViz(); }
+}
+
+// ── Optimiser sub-tabs ───────────────────────────
+const optPanels = document.querySelectorAll('.opt-panel');
+const optTabs   = document.querySelectorAll('.opt-tab');
+function showOpt(i) {
+  optPanels.forEach((p,j) => p.classList.toggle('visible', j===i));
+  optTabs.forEach((t,j)   => t.classList.toggle('active', j===i));
+}
+
+// ── Dropout ──────────────────────────────────────
+const H = [2,4,6,8,5,3];
+function dpUpdate(){
+  document.getElementById('dp-val').textContent = parseFloat(document.getElementById('dp-slider').value).toFixed(1);
+}
+function runDropout(){
+  const p   = parseFloat(document.getElementById('dp-slider').value);
+  const mask    = H.map(() => Math.random() > p ? 1 : 0);
+  const dropped = H.map((h,i) => mask[i]*h);
+  const scale   = 1/(1-p);
+  const final   = dropped.map(v => Math.round(v*scale*100)/100);
+
+  ['neuron-display','neuron-scaled'].forEach(id => document.getElementById(id).innerHTML='');
+  H.forEach((h,i) => {
+    const n = document.createElement('div');
+    n.className = 'neuron '+(mask[i]?'alive':'dead');
+    n.textContent = h;
+    document.getElementById('neuron-display').appendChild(n);
+  });
+  final.forEach((f,i) => {
+    const n = document.createElement('div');
+    n.className = 'neuron '+(mask[i]?'scaled':'dead');
+    n.textContent = mask[i] ? f.toFixed(1) : '0';
+    document.getElementById('neuron-scaled').appendChild(n);
+  });
+
+  document.getElementById('t-h').textContent    = '['+H.join(', ')+']';
+  document.getElementById('t-m').textContent    = '['+mask.join(', ')+']';
+  document.getElementById('t-drop').textContent = '['+dropped.join(', ')+']';
+  document.getElementById('t-scale').textContent= '1/(1−'+p.toFixed(1)+') = '+scale.toFixed(2);
+  document.getElementById('t-final').textContent= '['+final.map(v=>v.toFixed(2)).join(', ')+']';
+  document.getElementById('t-orig').textContent = (H.reduce((a,b)=>a+b,0)/H.length).toFixed(2);
+  document.getElementById('t-exp').textContent  = (final.reduce((a,b)=>a+b,0)/final.length).toFixed(2)+' (converges to orig avg over many passes)';
+  document.getElementById('dp-trace').style.display = 'block';
+}
+(function(){
+  H.forEach(h => {
+    const n = document.createElement('div');
+    n.className='neuron alive'; n.textContent=h;
+    document.getElementById('neuron-display').appendChild(n);
+  });
+})();
+
+// ── Xavier ────────────────────────────────────────
+function calcXavier(){
+  const ni = parseInt(document.getElementById('xi-slider').value);
+  const no = parseInt(document.getElementById('xo-slider').value);
+  document.getElementById('xi-val').textContent = ni;
+  document.getElementById('xo-val').textContent = no;
+  const s = ni+no, v = 2/s, std = Math.sqrt(v), lim = Math.sqrt(6/s);
+  document.getElementById('x-sum').textContent  = s;
+  document.getElementById('x-var').textContent  = v.toFixed(5);
+  document.getElementById('x-std').textContent  = std.toFixed(5);
+  document.getElementById('x-lim').textContent  = '√(6/'+s+') = '+lim.toFixed(4);
+  document.getElementById('x-range').textContent= '[−'+lim.toFixed(4)+', +'+lim.toFixed(4)+']';
+}
+
+// ── He ────────────────────────────────────────────
+function calcHe(){
+  const ni = parseInt(document.getElementById('he-slider').value);
+  document.getElementById('he-val').textContent  = ni;
+  const v = 2/ni, std = Math.sqrt(v);
+  document.getElementById('h-nin').textContent   = ni;
+  document.getElementById('h-var').textContent   = v.toFixed(5);
+  document.getElementById('h-std').textContent   = std.toFixed(5);
+  document.getElementById('h-range').textContent = 'N(0, '+std.toFixed(4)+')';
+}
+
+// ── L2 Calc ───────────────────────────────────────
+function calcL2(){
+  const w   = parseFloat(document.getElementById('l2-w').value);
+  const lam = parseFloat(document.getElementById('l2-lam').value);
+  document.getElementById('l2-wv').textContent   = w.toFixed(1);
+  document.getElementById('l2-lamv').textContent = lam.toFixed(3);
+  document.getElementById('l2-wsq').textContent  = (w*w).toFixed(4);
+  document.getElementById('l2-pen').textContent  = (lam*w*w).toFixed(4);
+  document.getElementById('l2-grad').textContent = (2*lam*w).toFixed(4)+' (pushes W toward 0)';
+  document.getElementById('l2-decay').textContent= 'W × '+(1-2*0.01*lam).toFixed(5)+' per step';
+}
+
+// ── Reg Viz ───────────────────────────────────────
+function updateRegViz(){
+  const W0  = parseFloat(document.getElementById('reg-w').value);
+  const lam = parseFloat(document.getElementById('reg-lam').value);
+  document.getElementById('reg-wv').textContent  = W0.toFixed(1);
+  document.getElementById('reg-lamv').textContent= lam.toFixed(2);
+
+  const lr=0.05, steps=20;
+  const l2=[W0], l1=[W0];
+  let wl2=W0, wl1=W0;
+  for(let i=0;i<steps;i++){
+    wl2 = wl2*(1-2*lr*lam);
+    wl1 = Math.abs(wl1)>lr*lam ? wl1-lr*lam*Math.sign(wl1) : 0;
+    l2.push(Math.round(wl2*1000)/1000);
+    l1.push(Math.round(wl1*1000)/1000);
+  }
+
+  const canvas = document.getElementById('reg-canvas');
+  const ctx = canvas.getContext('2d');
+  const CW=canvas.width, CH=canvas.height;
+  ctx.clearRect(0,0,CW,CH);
+
+  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const bg   = dark ? '#1a1a1a' : '#f5f5f3';
+  const gridC= dark ? '#333'    : '#e0e0e0';
+  const textC= dark ? '#999'    : '#888';
+
+  ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
+
+  const pad={t:16,b:32,l:44,r:16};
+  const gW=CW-pad.l-pad.r, gH=CH-pad.t-pad.b;
+  const allV=[...l2,...l1];
+  const minV=Math.min(0,...allV), maxV=Math.max(...allV);
+  const range=maxV-minV||1;
+  const toX=i=>pad.l+i*(gW/steps);
+  const toY=v=>pad.t+gH-(v-minV)/range*gH;
+
+  ctx.strokeStyle=gridC; ctx.lineWidth=0.5;
+  [0,.25,.5,.75,1].forEach(f=>{
+    const y=pad.t+gH*f;
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+gW,y); ctx.stroke();
+    ctx.fillStyle=textC; ctx.font='10px sans-serif'; ctx.textAlign='right';
+    ctx.fillText((maxV-(maxV-minV)*f).toFixed(1), pad.l-4, y+3);
+  });
+  ctx.fillStyle=textC; ctx.font='10px sans-serif'; ctx.textAlign='center';
+  [0,5,10,15,20].forEach(i => ctx.fillText(i, toX(i), CH-8));
+
+  [['#7F77DD',l2],['#E24B4A',l1]].forEach(([c,arr])=>{
+    ctx.strokeStyle=c; ctx.lineWidth=2; ctx.setLineDash([]);
+    ctx.beginPath();
+    arr.forEach((v,i)=>{ i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)); });
+    ctx.stroke();
+    const last=arr[arr.length-1];
+    ctx.fillStyle=c;
+    ctx.beginPath(); ctx.arc(toX(steps),toY(last),4,0,2*Math.PI); ctx.fill();
+    ctx.fillStyle=textC; ctx.font='10px sans-serif'; ctx.textAlign='left';
+    ctx.fillText(last.toFixed(2), toX(steps)+6, toY(last)+3);
+  });
+}
+</script>
